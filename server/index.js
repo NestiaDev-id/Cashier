@@ -7,6 +7,7 @@ import authRoutes from "./routes/auth.js";
 dotenv.config(); // Memuat variabel dari .env
 
 const app = express();
+const PORT = process.env.PORT || 5000;
 
 app.get("/", (req, res) => {
   res.send("Hello World!");
@@ -16,9 +17,9 @@ app.use("/api/auth", authRoutes);
 
 // koneksi ke database
 
-app.listen(3000, () => {
+app.listen(5000, () => {
   connectDB();
-  console.log("listening on port 3000");
+  console.log("listening on port: ", PORT);
 });
 
 // mongoose
