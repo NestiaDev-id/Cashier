@@ -15,6 +15,11 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    role: {
+      type: String,
+      enum: ["Manager", "Kasir","Customer"], // Membatasi hanya untuk role tertentu
+      default: "Customer",           // Atur default ke "Customer" jika tidak ditentukan
+    },
     lastLogin: {
       type: Date,
       default: Date.now,
@@ -25,7 +30,7 @@ const userSchema = new mongoose.Schema(
     },
     resetPasswordToken: String,
     resetPasswordTokenSecret: String,
-    verficationToken: String,
+    verificationToken: String,
     verificationTokenExpireAt: Date,
   },
   { timestamps: true }
