@@ -1,5 +1,6 @@
 import bcryptjs from 'bcryptjs';
-import User from '../models/User.js'; // Adjust the import based on your file structure
+import {User} from '../models/userModel.js'; // Adjust the import based on your file structure
+import { generateTokenAndSetCookie } from '../utils/generateTokenAndSetCookie.js';
 
 export const signup = async (req, res, next) => {
   const { email, password, name } = req.body;
@@ -33,6 +34,15 @@ export const signup = async (req, res, next) => {
 
     //jwt token
     generateTokenAndSetCookie(res,user._id);
+
+    res.status(201).json({
+      success: true,
+      message: "User registered successfully",
+      user: {
+        ...user._doc,
+        password: undefined,
+      }
+    })
 
     res.status(201).json({ success: true, message: "User registered successfully" });
   } catch (error) {
