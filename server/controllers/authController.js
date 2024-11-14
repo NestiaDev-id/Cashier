@@ -1,11 +1,3 @@
-<<<<<<< HEAD
-export const signup = async (req, res, next) => {
-  res.send("signup route");
-};
-export const login = async (req, res, next) => {
-  res.send("login route");
-};
-=======
 import bcryptjs from 'bcryptjs';
 import User from '../models/User.js'; // Adjust the import based on your file structure
 
@@ -52,7 +44,6 @@ export const login = async (req, res, next) => {
   res.send("login route");
 };
 
->>>>>>> 1f57814 (update)
 export const logout = async (req, res, next) => {
   res.send("logout route");
 };

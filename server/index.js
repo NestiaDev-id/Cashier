@@ -9,13 +9,7 @@ dotenv.config(); // Memuat variabel dari .env
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-<<<<<<< HEAD
-app.get("/", (req, res) => {
-  res.send("Hello World!");
-});
-=======
 app.use(express.json());
->>>>>>> 1f57814 (update)
 
 app.use("/api/auth", authRoutes);
 
