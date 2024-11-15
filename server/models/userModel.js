@@ -17,9 +17,10 @@ const userSchema = new mongoose.Schema(
     },
     role: {
       type: String,
-      enum: ["Manager", "Kasir","Customer"], // Membatasi hanya untuk role tertentu
-      default: "Customer",           // Atur default ke "Customer" jika tidak ditentukan
+      enum: ["Manager", "Kasir"], // Membatasi hanya untuk role tertentu
+      default: "Kasir",                    // Atur default ke "Customer" jika tidak ditentukan
     },
+    
     lastLogin: {
       type: Date,
       default: Date.now,
