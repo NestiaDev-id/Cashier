@@ -2,10 +2,11 @@
   "name": "project-002-cashier",
   "version": "1.0.0",
   "description": "",
-  "main": "server/index.js",
+  "main": "backend/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon ./server/index.js"
+    "dev": "nodemon ./backend/index.js",
+    "build": "npm install && npm install --prefix client && npm run build --prefix client"
   },
   "keywords": [],
   "author": "",
@@ -23,6 +24,8 @@
     "nodemailer": "^6.9.16"
   },
   "devDependencies": {
-    "nodemon": "^3.1.7"
+    "autoprefixer": "^10.4.20",
+    "nodemon": "^3.1.7",
+    "postcss": "^8.4.49"
   }
 }
