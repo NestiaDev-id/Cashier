@@ -13,16 +13,29 @@ export default function SignUp() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
+    if (!name || !email || !password) {
+      setModalMessage("All fields are required.");
+      setShowModal(true);
+      return;
+    }
+    if (!/\S+@\S+\.\S+/.test(email)) {
+      setModalMessage("Please enter a valid email address.");
+      setShowModal(true);
+      return;
+    }
     axios
-      .post("http://localhost:5000/api/auth/signup", { name, email, password })
-      .then((result) => {
+      .post(
+        "http://localhost:5000/api/auth/signup",
+        { name, email, password },
+        { headers: { "Content-Type": "application/json" } }
+      )
+      .then(() => {
         navigate("/login");
       })
       .catch((err) => {
-        console.error(err);
+        console.error("Error response:", err);
         setModalMessage(
-          "An unexpected error occurred. Please try again later."
+          err.response?.data?.message || "Terjadi Error saat Signup"
         );
         setShowModal(true);
       });
@@ -43,6 +56,7 @@ export default function SignUp() {
             <input
               type="text"
               id="name"
+              value={name}
               placeholder="Enter your name"
               className="w-full p-3 mt-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               onChange={(e) => setName(e.target.value)}
@@ -58,6 +72,7 @@ export default function SignUp() {
             <input
               type="email"
               id="email"
+              value={email}
               placeholder="Enter your email"
               className="w-full p-3 mt-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               onChange={(e) => setEmail(e.target.value)}
@@ -73,6 +88,7 @@ export default function SignUp() {
             <input
               type="password"
               id="password"
+              value={password}
               placeholder="Enter your password"
               className="w-full p-3 mt-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               onChange={(e) => setPassword(e.target.value)}

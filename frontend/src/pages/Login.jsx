@@ -15,7 +15,7 @@ export default function Login() {
       .post("http://localhost:5000/login", { email, password })
       .then((result) => {
         if (result.data === "Success") {
-          navigate("/home");
+          navigate("/");
         } else {
           console.log("Login failed");
         }
