@@ -12,10 +12,10 @@ export default function Login() {
     e.preventDefault();
 
     axios
-      .post("http://localhost:5000/login", { email, password })
+      .post("http://localhost:5000/api/auth/login", { email, password })
       .then((result) => {
         if (result.data === "Success") {
-          navigate("/");
+          navigate("/dashboard");
         } else {
           console.log("Login failed");
         }
