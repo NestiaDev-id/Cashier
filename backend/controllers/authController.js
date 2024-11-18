@@ -5,6 +5,8 @@ import { sendVerificationEmail } from '../mailtrap/emails.js';
 
 export const signup = async (req, res, next) => {
   const { email, password, name } = req.body;
+  console.log("Request body:", req.body);
+
 
   try {
     // Validate required fields
@@ -14,9 +16,9 @@ export const signup = async (req, res, next) => {
 
     // Check if user already exists
     const userAlreadyExists = await User.findOne({ email });
-    // console.log("User Already Exists",userAlreadyExists);
     
     if (userAlreadyExists) {
+      console.log("User Already Exists",userAlreadyExists);
       return res.status(400).json({ success: false, message: "User already exists" });
     }
 
@@ -38,7 +40,7 @@ export const signup = async (req, res, next) => {
     //jwt token
     generateTokenAndSetCookie(res,user._id);
 
-    await sendVerificationEmail(User.email,verificationToken);
+    // await sendVerificationEmail(User.email,verificationToken);
 
     res.status(201).json({
       success: true,
@@ -50,6 +52,8 @@ export const signup = async (req, res, next) => {
     })
 
   } catch (error) {
+    console.error("Error in signup", error.message);
+    console.log("Error in signup", error.message);
     res.status(400).json({ success: false, message: error.message });
   }
 };
