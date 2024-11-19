@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import cookieParser from 'cookie-parser';
 import { connectDB } from "./db/connectDB.js";
 import authRoutes from "./routes/auth.js";
+import productsRoutes from "./routes/products.js";
 import cors from "cors";
 
 dotenv.config(); // Memuat variabel dari .env
@@ -16,12 +17,9 @@ app.use(cookieParser());
 app.use(cors());
 
 app.use("/api/auth/", authRoutes);
+app.use("/api/pruducts/", productsRoutes);
 
-app.get('*', (req, res) => {
 
-  res.status(404).send('Page not found');
-
-});
 // koneksi ke database
 
 app.listen(PORT, () => {
