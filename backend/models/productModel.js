@@ -10,7 +10,6 @@ const productSchema = new mongoose.Schema(
     },
     description: {
       type: String,
-      required: [true, "Please provide a product description"],
       maxLength: [1000, "Description cannot exceed 500 characters"],
     },
     price: {
@@ -32,8 +31,8 @@ const productSchema = new mongoose.Schema(
       type: String,
       required: [true, "Please provide a product category"],
       enum: {
-        values: ["electronics", "fashion", "food", "books", "furniture"],
-        message: "Category must be one of: electronics, fashion, food, books, furniture",
+        values: ["electronics", "fashion", "food", "books", "snack", "drink"],
+        message: "Category must be one of: electronics, fashion, food, books, snack, drink",
       },
     },
     images: [

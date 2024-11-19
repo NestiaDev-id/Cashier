@@ -17,7 +17,7 @@ app.use(cookieParser());
 app.use(cors());
 
 app.use("/api/auth/", authRoutes);
-app.use("/api/pruducts/", productsRoutes);
+app.use("/api/product/", productsRoutes);
 
 
 // koneksi ke database

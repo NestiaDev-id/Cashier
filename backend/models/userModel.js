@@ -4,21 +4,21 @@ const userSchema = new mongoose.Schema(
   {
     email: {
       type: String,
-      required: true,
+      required: [true, "Tolong Masukkan Email anda"],
       unique: true,
     },
     password: {
       type: String,
-      required: true,
+      required: [true, "Tolong Masukkan Password anda"],
     },
     name: {
       type: String,
-      required: true,
+      required: [true, "Tolong Masukkan Nama anda"],
     },
     role: {
       type: String,
-      enum: ["Manager", "Kasir"], // Membatasi hanya untuk role tertentu
-      default: "Kasir",                    // Atur default ke "Customer" jika tidak ditentukan
+      enum: ["Manager", "Kasir"], // Role 
+      default: "Kasir", // Atur default ke "Customer" jika tidak ditentukan
     },
     
     lastLogin: {

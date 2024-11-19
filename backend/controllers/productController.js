@@ -1,9 +1,12 @@
 import {Product} from '../models/productModel.js';
 
 export const addProduct = async (req, res, next) => {
-    const { name, description, price, stock, category, images, seller } = req.body;
+    const { name, description, price, stock, category, images, } = req.body;
 
   try {
+    if (!name || !price || !stock|| !category ) {
+        throw new Error ('All fields are required');
+    }
     const product = new Product({
       name,
       description,
@@ -11,13 +14,21 @@ export const addProduct = async (req, res, next) => {
       stock,
       category,
       images,
-      seller,
     });
 
     const savedProduct = await product.save();
-    res.status(201).json({ success: true, product: savedProduct });
+
+    res.status(201).json({ 
+        success: true, 
+        message: "Product berhasil ditambahkan", 
+        product: savedProduct 
+    });
   } catch (err) {
-    res.status(400).json({ success: false, message: err.message });
+    console.error("Terjadi kesalahan dalam menambahkan product", err.message);
+    res.status(400).json({ 
+        success: false, 
+        message: err.message 
+    });
   }
 }
 export const getAllProduct = async (req,res) => {
