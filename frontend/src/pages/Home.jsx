@@ -1,5 +1,4 @@
 import Navbar from "../components/Navbar";
-import React from "react";
 import HeroImage from "../assets/images/hero.svg";
 import { TypeAnimation } from "react-type-animation";
 

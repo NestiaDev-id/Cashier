@@ -2,25 +2,44 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import Modal from "../components/Modal.jsx"; // Import Modal Komponen
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showModal, setShowModal] = useState(false); // Untuk modal
+
+  const [modalMessage, setModalMessage] = useState(""); // Pesan error
+
   const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
     axios
-      .post("http://localhost:5000/api/auth/login", { email, password })
+      .post(
+        "http://localhost:5000/api/auth/login",
+        { email, password },
+        {
+          headers: { "Content-Type": "application/json" },
+          //   withCredentials: true,
+        }
+      )
       .then((result) => {
-        if (result.data === "Success") {
+        console.log("API Response:", result.data); // Tambahkan ini
+        if (result.data.success) {
           navigate("/dashboard");
         } else {
           console.log("Login failed");
         }
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.error("Error response:", err);
+        setModalMessage(
+          err.response?.data?.message || "Terjadi Error saat Login"
+        );
+        setShowModal(true);
+      });
   };
 
   return (
@@ -67,11 +86,20 @@ export default function Login() {
         </form>
         <div className="mt-4 text-center">
           <p className="text-sm">Don&apos;t have an account?</p>
-          <Link to="/signup" className="text-blue-500 hover:underline text-sm">
+          <button
+            to="/signup"
+            className="text-blue-500 hover:underline text-sm"
+          >
             Register here
-          </Link>
+          </button>
         </div>
       </div>
+      <Modal
+        show={showModal}
+        onClose={() => setShowModal(false)}
+        title="Error"
+        message={modalMessage}
+      ></Modal>
     </div>
   );
 }

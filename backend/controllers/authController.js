@@ -5,7 +5,7 @@ import { sendVerificationEmail } from '../mailtrap/emails.js';
 
 export const signup = async (req, res, next) => {
   const { email, password, name } = req.body;
-  console.log("Request body:", req.body);
+  console.log("Register Request body:", req.body);
 
 
   try {
@@ -64,6 +64,8 @@ export const verifyEmail = async (req, res) => {
 
 export const login = async (req, res, next) => {
   const {email, password} = req.body;
+  console.log("Login Request body:", req.body);
+
 
   try{
     const user = await User.findOne({email});
