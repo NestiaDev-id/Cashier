@@ -14,6 +14,9 @@ function ShowProduct() {
     name: "",
     description: "",
     price: "",
+    quantity: "",
+    image: "",
+    stock: "",
   });
 
   useEffect(() => {
@@ -26,6 +29,9 @@ function ShowProduct() {
           name: response.data.product.name,
           description: response.data.product.description,
           price: response.data.product.price,
+          stock: response.data.product.stock,
+          category: response.data.product.category,
+          images: response.data.product.images,
         });
         setLoading(false);
       })
@@ -73,8 +79,8 @@ function ShowProduct() {
       });
   };
 
-  const toggleDeleteModal = () => setShowModal(!showModal); // Toggle delete confirmation modal
-  const toggleEditModal = () => setEditModal(!editModal); // Toggle edit modal
+  const toggleDeleteModal = () => setShowModal(!showModal);
+  const toggleEditModal = () => setEditModal(!editModal);
 
   if (loading) return <div className="text-center text-lg">Loading...</div>;
   if (error) return <div className="text-center text-red-600">{error}</div>;
@@ -84,7 +90,7 @@ function ShowProduct() {
       {/* Product Image */}
       <div className="w-full lg:w-1/2 flex justify-center mb-6 lg:mb-0">
         <img
-          src={product.image || "default-image.jpg"}
+          src={product.images || "default-image.jpg"}
           alt={product.name}
           className="max-w-full h-auto rounded-lg shadow-lg"
         />
@@ -180,6 +186,7 @@ function ShowProduct() {
                 className="w-full p-2 border rounded-lg mt-2"
               />
             </div>
+
             <div className="mb-4">
               <label htmlFor="price" className="block text-gray-700">
                 Harga
@@ -191,6 +198,46 @@ function ShowProduct() {
                 value={formData.price}
                 onChange={handleEditChange}
                 className="w-full p-2 border rounded-lg mt-2"
+              />
+            </div>
+            <div className="mb-4">
+              <label htmlFor="price" className="block text-gray-700">
+                Stock
+              </label>
+              <input
+                type="number"
+                id="stock"
+                name="stock"
+                value={formData.stock}
+                onChange={handleEditChange}
+                className="w-full p-2 border rounded-lg mt-2"
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700">
+                Category
+              </label>
+              <input
+                type="text"
+                id="category"
+                name="category"
+                value={formData.category}
+                onChange={handleEditChange}
+                required
+                className="w-full px-3 py-2 mt-1 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700">
+                Image URL
+              </label>
+              <input
+                type="text"
+                id="images"
+                name="images"
+                value={formData.images}
+                onChange={handleEditChange}
+                className="w-full px-3 py-2 mt-1 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
             <div className="flex justify-end space-x-4">

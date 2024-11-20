@@ -1,9 +1,8 @@
 import {Product} from '../models/productModel.js';
 
 export const addProduct = async (req, res, next) => {
-    console.log("Data yang diterima di backend:", req.body); // Tambahkan ini
-
     const { name, description, price, stock, category, images, } = req.body;
+
   try {
     if (!name || !price || !stock ) {
         throw new Error ('All fields are required');
@@ -35,6 +34,7 @@ export const addProduct = async (req, res, next) => {
     });
   }
 }
+
 export const getAllProduct = async (req,res) => {
     try {
         const products = await Product.find();
@@ -43,9 +43,8 @@ export const getAllProduct = async (req,res) => {
         res.status(500).json({ success: false, message: err.message });
       }
 }
-export const detailProduct = async (req,res) => {
-    console.log();
-    
+
+export const detailProduct = async (req,res) => {  
     try {
         const product = await Product.findById(req.params.id);
     
@@ -63,7 +62,7 @@ export const editProduct = async (req,res) => {
         const updatedProduct = await Product.findByIdAndUpdate(
           req.params.id,
           req.body,
-          { new: true, runValidators: true } // Mengembalikan produk terbaru dengan validasi
+          { new: true, runValidators: true } 
         );
     
         if (!updatedProduct) {

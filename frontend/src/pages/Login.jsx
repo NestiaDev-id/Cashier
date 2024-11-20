@@ -26,8 +26,11 @@ export default function Login() {
         }
       )
       .then((result) => {
-        console.log("API Response:", result.data); // Tambahkan ini
+        console.log("API Response:", result.data);
         if (result.data.success) {
+          const { token, user } = result.data;
+          localStorage.setItem("authToken", token);
+          localStorage.setItem("userInfo", JSON.stringify(user));
           navigate("/dashboard");
         } else {
           console.log("Login failed");
@@ -86,12 +89,9 @@ export default function Login() {
         </form>
         <div className="mt-4 text-center">
           <p className="text-sm">Don&apos;t have an account?</p>
-          <button
-            to="/signup"
-            className="text-blue-500 hover:underline text-sm"
-          >
+          <Link to="/signup" className="text-blue-500 hover:underline text-sm">
             Register here
-          </button>
+          </Link>
         </div>
       </div>
       <Modal

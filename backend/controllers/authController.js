@@ -66,7 +66,6 @@ export const login = async (req, res, next) => {
   const {email, password} = req.body;
   console.log("Login Request body:", req.body);
 
-
   try{
     const user = await User.findOne({email});
     if (!user) {
@@ -75,7 +74,7 @@ export const login = async (req, res, next) => {
     const isPsswordValid = await bcryptjs.compare(password, user.password);
 
     if (!isPsswordValid) {
-      return res.status(401).json({ success: false, message: "Invalid credentials"});
+      return res.status(401).json({ success: false, message: "Password yang anda masukkan salah!" });
     }
     generateTokenAndSetCookie(res, user._id);
 
@@ -96,6 +95,23 @@ export const login = async (req, res, next) => {
 };
 
 export const logout = async (req, res, next) => {
-  res.clearCookie("token");
-  res.status(200).json({ success: true, message: "User logged out successfully"});
+  try {
+    // Bersihkan cookie token
+    res.clearCookie("token");
+
+    // Kirim respon sukses
+    res.status(200).json({ 
+      success: true, 
+      message: "User logged out successfully" 
+    });
+  } catch (error) {
+    console.error("Error during logout:", error);
+
+    // Tangani error dan kirim respon gagal
+    res.status(500).json({ 
+      success: false, 
+      message: "Failed to logout. Please try again.", 
+      error: error.message 
+    });
+  }
 };

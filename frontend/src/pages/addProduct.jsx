@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom"; // Import useNavigate
 
 function AddProduct() {
   const [name, setName] = useState("");
@@ -9,6 +9,7 @@ function AddProduct() {
   const [stock, setStock] = useState(0);
   const [category, setCategory] = useState("");
   const [images, setImages] = useState("");
+  const navigate = useNavigate();
 
   const handleAddProduct = async (e) => {
     e.preventDefault();
@@ -30,16 +31,11 @@ function AddProduct() {
     };
 
     try {
-      const response = await axios.post(
-        "http://localhost:5000/api/product/add",
-        productData,
-        {
-          headers: { "Content-Type": "application/json" },
-        }
-      );
+      await axios.post("http://localhost:5000/api/product/add", productData, {
+        headers: { "Content-Type": "application/json" },
+      });
       alert("Produk berhasil ditambahkan!");
-      //   onProductAdded(response.data.product); // Notify parent component
-      //   onClose(); // Close the modal
+      navigate("/products"); // Navigasi ke halaman /products
     } catch (error) {
       console.error("Terjadi error saat menambahkan produk:", error.message);
       alert("Gagal menambahkan produk.");
@@ -52,7 +48,7 @@ function AddProduct() {
         <h2 className="text-xl font-bold text-gray-800 mb-4">
           Add New Product
         </h2>
-        <div>
+        <form onSubmit={handleAddProduct}>
           <div className="mb-4">
             <label className="block text-sm font-medium text-gray-700">
               Product Name
@@ -125,7 +121,6 @@ function AddProduct() {
           </div>
           <div className="flex justify-end space-x-4">
             <Link
-              type="button"
               to="/products"
               className="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400"
             >
@@ -133,13 +128,12 @@ function AddProduct() {
             </Link>
             <button
               type="submit"
-              onClick={handleAddProduct}
               className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
             >
               Save
             </button>
           </div>
-        </div>
+        </form>
       </div>
     </div>
   );
