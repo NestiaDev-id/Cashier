@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 function ProductCard({ product }) {
   return (
@@ -26,13 +27,13 @@ function ProductCard({ product }) {
         </p>
 
         {/* See Detail Button */}
-        <button
+        <Link
+          to={`/products/detail/${product._id}`} // Ganti :id dengan ID produk sebenarnya
           className="mt-4 w-full bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition"
-          onClick={() => alert(`See details for: ${product._id}`)}
-          aria-label={`See details for ${product._id}`} // Adding aria-label for screen readers
+          aria-label={`See details for ${product.name}`} // Tambahkan nama produk untuk deskripsi yang lebih jelas
         >
           See Detail
-        </button>
+        </Link>
       </div>
     </div>
   );

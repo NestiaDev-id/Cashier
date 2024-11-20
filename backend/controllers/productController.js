@@ -1,10 +1,11 @@
 import {Product} from '../models/productModel.js';
 
 export const addProduct = async (req, res, next) => {
-    const { name, description, price, stock, category, images, } = req.body;
+    console.log("Data yang diterima di backend:", req.body); // Tambahkan ini
 
+    const { name, description, price, stock, category, images, } = req.body;
   try {
-    if (!name || !price || !stock|| !category ) {
+    if (!name || !price || !stock ) {
         throw new Error ('All fields are required');
     }
     const product = new Product({
@@ -25,9 +26,12 @@ export const addProduct = async (req, res, next) => {
     });
   } catch (err) {
     console.error("Terjadi kesalahan dalam menambahkan product", err.message);
+    console.log(err);
+    
     res.status(400).json({ 
         success: false, 
-        message: err.message 
+        message: err.message ,
+        details: err.error
     });
   }
 }
@@ -40,6 +44,8 @@ export const getAllProduct = async (req,res) => {
       }
 }
 export const detailProduct = async (req,res) => {
+    console.log();
+    
     try {
         const product = await Product.findById(req.params.id);
     

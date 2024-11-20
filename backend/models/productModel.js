@@ -35,18 +35,9 @@ const productSchema = new mongoose.Schema(
         message: "Category must be one of: electronics, fashion, food, books, snack, drink",
       },
     },
-    images: [
-      {
-        url: {
-          type: String,
-          required: true,
-        },
-        altText: {
-          type: String,
-          default: "Product Image",
-        },
-      },
-    ],
+    images: {
+      type: String,
+    },
     createdAt: {
       type: Date,
       default: Date.now,
