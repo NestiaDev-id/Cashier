@@ -7,6 +7,8 @@ import DashboardProducts from "./pages/DashboardProducts";
 import Products from "./pages/Products";
 import ShowProduct from "./pages/ShowProduct";
 import AddProduct from "./pages/addProduct";
+import Membership from "./pages/Membership";
+import LaporanKeuangan from "./pages/LaporanKeuangan";
 
 function App() {
   return (
@@ -19,6 +21,8 @@ function App() {
       <Route path="/addProduct" element={<AddProduct />} />{" "}
       <Route path="/products/detail/:id" element={<ShowProduct />} />{" "}
       <Route path="/products/edit/:id" element={<ShowProduct />} />{" "}
+      <Route path="/membership" element={<Membership />} />{" "}
+      <Route path="/laporan-keuangan" element={<LaporanKeuangan />} />{" "}
       {/* <Route path="" element={<Products />} /> */}
     </Routes>
   );
