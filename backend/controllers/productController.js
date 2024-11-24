@@ -35,13 +35,35 @@ export const addProduct = async (req, res, next) => {
   }
 }
 
+// export const getAllProduct = async (req,res) => {
+//     try {
+//         const products = await Product.find();
+//         res.status(200).json({ success: true, products });
+//       } catch (err) {
+//         res.status(500).json({ success: false, message: err.message });
+//       }
+// }
+
+
 export const getAllProduct = async (req,res) => {
-    try {
-        const products = await Product.find();
-        res.status(200).json({ success: true, products });
-      } catch (err) {
-        res.status(500).json({ success: false, message: err.message });
-      }
+  const { page = 1, limit = 10 } = req.query;
+
+  try {
+    const products = await Product.find()
+      .skip((page - 1) * limit) // Skip produk yang sudah ditampilkan
+      .limit(Number(limit)); // Batasi jumlah produk yang diambil
+
+    const totalProducts = await Product.countDocuments(); // Total produk untuk menghitung jumlah halaman
+
+    res.json({
+      products,
+      totalProducts,
+      totalPages: Math.ceil(totalProducts / limit),
+      currentPage: Number(page),
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Gagal memuat produk", error });
+  }
 }
 
 export const detailProduct = async (req,res) => {  
