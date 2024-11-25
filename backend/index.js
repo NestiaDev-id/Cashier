@@ -5,6 +5,7 @@ import cookieParser from 'cookie-parser';
 import { connectDB } from "./db/connectDB.js";
 import authRoutes from "./routes/auth.js";
 import userRoutes from "./routes/user.js";
+import transaksiRoutes from "./routes/transaksi.js";
 import productsRoutes from "./routes/products.js";
 import cors from "cors";
 
@@ -25,6 +26,7 @@ app.use(cors());
 app.use("/api/auth/", authRoutes);
 app.use("/api/product/", productsRoutes);
 app.use("/api/users/", userRoutes);
+app.use("/api/transaksi/", transaksiRoutes);
 
 
 // koneksi ke database

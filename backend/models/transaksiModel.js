@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const transaksiSchema = new mongoose.Schema({
   tanggal: {
@@ -12,14 +12,14 @@ const transaksiSchema = new mongoose.Schema({
   },
   pelanggan: {
     type: String,
-    default: 'Umum', // Pelanggan umum jika tidak terdaftar
+    default: 'Umum',
   },
   itemBelanja: [
     {
       namaProduk: { type: String, required: true },
       jumlah: { type: Number, required: true },
       hargaSatuan: { type: Number, required: true },
-      subTotal: { type: Number, required: true }, // jumlah * hargaSatuan
+      subTotal: { type: Number, required: true },
     },
   ],
   totalBayar: {
@@ -28,17 +28,24 @@ const transaksiSchema = new mongoose.Schema({
   },
   metodePembayaran: {
     type: String,
-    enum: ['Tunai', 'Kartu Kredit', 'E-Wallet', 'Transfer Bank'],
+    enum: ['Tunai', 'Kartu Kredit', 'E-Wallet', 'Transfer Bank', 'Midtrans'],
     required: true,
   },
   statusPembayaran: {
     type: String,
-    enum: ['Lunas', 'Belum Lunas'],
-    default: 'Lunas',
+    enum: ['Pending', 'Lunas', 'Dibatalkan'],
+    default: 'Pending',
   },
   kasir: {
     type: String,
     required: true,
+  },
+  orderId: {
+    type: String,
+    required: true,
+  },
+  paymentUrl: {
+    type: String,
   },
 });
 

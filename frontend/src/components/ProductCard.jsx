@@ -22,14 +22,14 @@ function ProductCard({ product }) {
         </p>
 
         {/* Product Description */}
-        <p className="text-sm text-gray-600 mt-2 line-clamp-3">
+        <p className="text-sm text-gray-600 mt-2 line-clamp-3 mb-3">
           {product.description}
         </p>
 
         {/* See Detail Button */}
         <Link
           to={`/products/detail/${product._id}`} // Ganti :id dengan ID produk sebenarnya
-          className="mt-4 w-full bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition"
+          className="mt-4 w-full bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition "
           aria-label={`See details for ${product.name}`} // Tambahkan nama produk untuk deskripsi yang lebih jelas
         >
           See Detail

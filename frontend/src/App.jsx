@@ -9,6 +9,7 @@ import ShowProduct from "./pages/ShowProduct";
 import AddProduct from "./pages/addProduct";
 import Membership from "./pages/Membership";
 import LaporanKeuangan from "./pages/LaporanKeuangan";
+import Payment from "./pages/Payment";
 
 function App() {
   return (
@@ -23,7 +24,7 @@ function App() {
       <Route path="/products/edit/:id" element={<ShowProduct />} />{" "}
       <Route path="/membership" element={<Membership />} />{" "}
       <Route path="/laporan-keuangan" element={<LaporanKeuangan />} />{" "}
-      {/* <Route path="" element={<Products />} /> */}
+      <Route path="/payment" element={<Payment />} />
     </Routes>
   );
 }

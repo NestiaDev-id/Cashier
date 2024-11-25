@@ -7,7 +7,7 @@ export default function Home() {
     <div>
       <Navbar></Navbar>
       <div className="homepage pb-10">
-        <div className="container mx-auto">
+        <div className="container mx-auto p-3">
           <div className="hero grid  md:grid-cols-2 grid-cols-1 items-center gap-20 pt-32">
             <div className="box">
               <h1 className="lg:text-5xl/tight text-3xl font-medium mb-7">
