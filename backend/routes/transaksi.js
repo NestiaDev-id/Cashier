@@ -4,10 +4,10 @@ import { createTransaksi, getAllTransaksi, getTransaksiById, updateTransaksiStat
 const router = express.Router();
 
 router.post("/create", createTransaksi);
-// router.get("/all", getAllProduct);
-// router.get("/:id", detailProduct);
-// router.put("/edit/:id", editProduct);
-// router.delete("/delete/:id", deleteProduct);
+router.get("/getall", getAllTransaksi);
+router.get("/:id", getTransaksiById);
+router.put("/update/:id", updateTransaksiStatus);
+router.delete("/delete/:id", deleteTransaksi);
 
 
 export default router;
