@@ -67,7 +67,6 @@ function Sidebar() {
         >
           <path d="M11.5 8a2.5 2.5 0 1 0-5 0 2.5 2.5 0 0 0 5 0z" />
           <path d="M5.5 10a3.5 3.5 0 0 0-3.5 3.5v1A3.5 3.5 0 0 0 5.5 18h5a3.5 3.5 0 0 0 3.5-3.5v-1A3.5 3.5 0 0 0 10.5 10h-5z" />
-          <path d="M9 11.5V13h3.5a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5H9v1.5h5.5a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5H9v3.5a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5V14H3.5a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5H8V9H3.5a.5.5 0 0 1-.5-.5V7a.5.5 0 0 1 .5-.5H8V3.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5V6h3.5a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5H9v3h5.5a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5H9v3z" />
         </svg>
       ),
       path: "/membership",
@@ -88,7 +87,11 @@ function Sidebar() {
       ),
       path: "/payment",
     },
-    {
+  ];
+
+  // Add conditional item
+  if (userInfo?.role === "manager") {
+    menuItems.push({
       label: "Laporan Keuangan (Maintance)", // Financial Report
       icon: (
         <svg
@@ -103,8 +106,8 @@ function Sidebar() {
         </svg>
       ),
       path: "/laporan-keuangan", // Path to the financial report page
-    },
-  ];
+    });
+  }
 
   return (
     <div className="flex h-screen">
@@ -136,6 +139,7 @@ function Sidebar() {
             </Link>
           ))}
         </nav>
+
         {/* User Info */}
         {userInfo && (
           <div className="p-4 border-t border-gray-700">
