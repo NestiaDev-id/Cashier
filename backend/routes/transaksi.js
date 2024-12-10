@@ -3,7 +3,7 @@ import { createTransaksi, getAllTransaksi, getTransaksiById, updateTransaksiStat
 
 const router = express.Router();
 
-router.post("/create", createTransaksi);
+router.post("/pay", createTransaksi);
 router.get("/getall", getAllTransaksi);
 router.get("/:id", getTransaksiById);
 router.put("/update/:id", updateTransaksiStatus);

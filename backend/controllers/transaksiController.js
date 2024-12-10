@@ -1,12 +1,11 @@
 import { Transaksi } from '../models/transaksiModel.js';
 import midtransClient from 'midtrans-client';
-
+import otpGenerator from 'otp-generator';
 
 // Konfigurasi Midtrans
 const snap = new midtransClient.Snap({
   isProduction: false, // Ubah ke true jika menggunakan environment production
-  serverKey: process.env.SERVER_KEY, // Ganti dengan Server Key dari akun Midtrans Anda
-  clientKey: process.env.CLIENT_KEY, // Ganti dengan Client Key dari akun Midtrans Anda
+  serverKey: process.env.SERVER_KEY, // Server Key dari Midtrans
 });
 
 // GET: Mendapatkan semua transaksi
@@ -15,7 +14,7 @@ export const getAllTransaksi = async (req, res) => {
     const transaksi = await Transaksi.find();
     res.status(200).json(transaksi);
   } catch (error) {
-    res.status(500).json({ message: 'Gagal mendapatkan transaksi', error });
+    res.status(500).json({ message: 'Gagal mendapatkan transaksi', error: error.message });
   }
 };
 
@@ -29,84 +28,90 @@ export const getTransaksiById = async (req, res) => {
     }
     res.status(200).json(transaksi);
   } catch (error) {
-    res.status(500).json({ message: 'Gagal mendapatkan transaksi', error });
+    res.status(500).json({ message: 'Gagal mendapatkan transaksi', error: error.message });
   }
 };
 
-// POST: Menambahkan transaksi baru dengan Midtrans
-// POST: Menambahkan transaksi baru dengan Midtrans
+// POST: Membuat transaksi baru menggunakan Midtrans
 export const createTransaksi = async (req, res) => {
-  const { userId, items, totalAmount, customerDetails } = req.body;
-
-  // Validasi input
-  if (!userId || !items || !totalAmount || !customerDetails) {
-    return res.status(400).json({
-      message: "Data transaksi tidak lengkap. Harap cek kembali input Anda.",
-    });
-  }
-
-  // Persiapan data untuk Midtrans
-  const transactionDetails = {
-    order_id: `ORDER-${new Date().getTime()}`, // ID unik untuk transaksi
-    gross_amount: totalAmount,
-  };
-
-  const itemDetails = items.map(item => ({
-    id: item.id || 'unknown',
-    price: item.price || 0,
-    quantity: item.quantity || 1,
-    name: item.name || 'Item Tanpa Nama',
-  }));
-
-  const customerDetailsFormatted = {
-    first_name: customerDetails.firstName || "Guest",
-    last_name: customerDetails.lastName || "",
-    email: customerDetails.email || "guest@example.com",
-    phone: customerDetails.phone || "0000000000",
-  };
-
-  const parameter = {
-    transaction_details: transactionDetails,
-    item_details: itemDetails,
-    customer_details: customerDetailsFormatted,
-  };
+  const { nama, email, phone, itemBelanja, metodePembayaran } = req.body;
 
   try {
-    // Membuat transaksi di Midtrans
-    const midtransResponse = await snap.createTransaction(parameter);
+    // Validasi data input
+    // if (!nama || !email || !phone || !itemBelanja || itemBelanja.length === 0 || !metodePembayaran) {
+    //   return res.status(400).json({ message: 'Semua kolom wajib diisi!' });
+    // }
 
-    if (!midtransResponse.redirect_url) {
-      throw new Error("Midtrans tidak memberikan redirect_url");
+    // Hitung total pembayaran
+    const totalBayar = itemBelanja.reduce((total, item) => total + item.subTotal, 0);
+
+    // Generate nomor transaksi dan order ID
+    const nomorTransaksi = otpGenerator.generate(10, {
+      upperCase: false,
+      specialChars: false,
+    });
+
+    const orderId = otpGenerator.generate(15, { upperCase: true, specialChars: false });
+
+    // Siapkan parameter untuk Midtrans jika metode pembayaran adalah Midtrans
+    let paymentUrl = null;
+    let transactionToken = null;
+    if (metodePembayaran === 'Midtrans') {
+      const parameter = {
+        transaction_details: {
+          order_id: orderId,
+          gross_amount: totalBayar,
+        },
+        credit_card: {
+          secure: true,
+        },
+        customer_details: {
+          first_name: nama,
+          email,
+          phone,
+        },
+      };
+
+      // Membuat transaksi dengan Midtrans Snap API
+      const transaction = await snap.createTransaction(parameter);
+      paymentUrl = transaction.redirect_url; // Ambil URL pembayaran
+      transactionToken = transaction.token; // Ambil token transaksi
     }
 
-    // Simpan data transaksi ke database
-    const transaksi = new Transaksi({
-      userId,
-      items,
-      totalAmount,
-      orderId: transactionDetails.order_id,
-      paymentUrl: midtransResponse.redirect_url,
-      status: "pending",
+    // Buat dokumen transaksi
+    const newTransaksi = new Transaksi({
+      tanggal: new Date(),
+      nomorTransaksi,
+      nama,
+      email,
+      phone,
+      itemBelanja,
+      totalBayar,
+      metodePembayaran,
+      statusPembayaran: metodePembayaran === 'Midtrans' ? 'Pending' : 'Lunas',
+      orderId,
+      paymentUrl,
+      transactionToken,  // Simpan token transaksi
     });
-    await transaksi.save();
 
-    // Kirim response ke client
+    // Simpan transaksi ke database
+    await newTransaksi.save();
+
+    // Kirim respons ke klien
     res.status(201).json({
-      message: "Transaksi berhasil dibuat",
-      transaksi,
-      paymentUrl: midtransResponse.redirect_url,
+      message: 'Transaksi berhasil dibuat',
+      transaksi: newTransaksi,
+      transactionToken, // Kembalikan token transaksi ke klien
     });
   } catch (error) {
-    console.error("Error saat membuat transaksi:", error);
-
-    // Respons error lebih informatif
     res.status(500).json({
-      message: "Gagal membuat transaksi",
+      message: 'Gagal membuat transaksi',
       error: error.message,
-      detail: error?.ApiResponse || null,
     });
   }
 };
+
+
 
 // PUT: Memperbarui status transaksi berdasarkan notifikasi Midtrans
 export const updateTransaksiStatus = async (req, res) => {
@@ -128,9 +133,70 @@ export const updateTransaksiStatus = async (req, res) => {
       transaksi,
     });
   } catch (error) {
-    res.status(400).json({ message: 'Gagal memperbarui status transaksi', error });
+    res.status(400).json({ message: 'Gagal memperbarui status transaksi', error: error.message });
   }
 };
+
+export const createQrisTransaction = async (req, res) => {
+  const { nama, email, phone, itemBelanja } = req.body;
+
+  try {
+    // Hitung total pembayaran
+    const totalBayar = itemBelanja.reduce((total, item) => total + item.subTotal, 0);
+
+    // Generate orderId untuk transaksi
+    const orderId = otpGenerator.generate(15, { upperCase: true, specialChars: false });
+
+    // Buat parameter untuk membuat transaksi QRIS
+    const parameter = {
+      payment_type: "qris", // Tentukan jenis pembayaran QRIS
+      transaction_details: {
+        order_id: orderId,
+        gross_amount: totalBayar,
+      },
+      customer_details: {
+        first_name: nama,
+        email,
+        phone,
+      },
+    };
+
+    // Membuat transaksi menggunakan Midtrans API
+    const chargeResponse = await core.api.charge(parameter);
+
+    // Ambil QRIS URL untuk generate QR code
+    const qrisUrl = chargeResponse.qr_code_url;
+
+    // Simpan transaksi ke database
+    const newTransaksi = new Transaksi({
+      tanggal: new Date(),
+      nama,
+      email,
+      phone,
+      itemBelanja,
+      totalBayar,
+      metodePembayaran: 'QRIS',
+      statusPembayaran: 'Pending',
+      orderId,
+      paymentUrl: qrisUrl, // Simpan QRIS URL
+    });
+
+    await newTransaksi.save();
+
+    // Kirim QRIS URL sebagai response
+    res.status(201).json({
+      message: 'Transaksi QRIS berhasil dibuat',
+      transaksi: newTransaksi,
+      qrCodeUrl: qrisUrl, // Kirim QR Code URL untuk ditampilkan ke frontend
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: 'Gagal membuat transaksi QRIS',
+      error: error.message,
+    });
+  }
+};
+
 
 // DELETE: Menghapus transaksi berdasarkan ID
 export const deleteTransaksi = async (req, res) => {
@@ -142,6 +208,6 @@ export const deleteTransaksi = async (req, res) => {
     }
     res.status(200).json({ message: 'Transaksi berhasil dihapus', transaksi });
   } catch (error) {
-    res.status(500).json({ message: 'Gagal menghapus transaksi', error });
+    res.status(500).json({ message: 'Gagal menghapus transaksi', error: error.message });
   }
 };

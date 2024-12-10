@@ -10,9 +10,14 @@ const transaksiSchema = new mongoose.Schema({
     required: true,
     unique: true,
   },
-  pelanggan: {
+  nama: {
     type: String,
-    default: 'Umum',
+  },
+  email: {
+    type: String,
+  },
+  phone: {
+    type: String,
   },
   itemBelanja: [
     {
@@ -36,15 +41,14 @@ const transaksiSchema = new mongoose.Schema({
     enum: ['Pending', 'Lunas', 'Dibatalkan'],
     default: 'Pending',
   },
-  kasir: {
-    type: String,
-    required: true,
-  },
   orderId: {
     type: String,
     required: true,
   },
   paymentUrl: {
+    type: String,
+  },
+  transactionToken: {
     type: String,
   },
 });
