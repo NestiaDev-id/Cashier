@@ -55,7 +55,7 @@ function Sidebar() {
       path: "/products",
     },
     {
-      label: "Membership (Maintance)",
+      label: "Membership",
       icon: (
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -71,28 +71,28 @@ function Sidebar() {
       ),
       path: "/membership",
     },
-    {
-      label: "Payment",
-      icon: (
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="24"
-          height="24"
-          fill="currentColor"
-          className="bi bi-credit-card"
-          viewBox="0 0 16 16"
-        >
-          <path d="M2 3h12a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z" />
-        </svg>
-      ),
-      path: "/payment",
-    },
+    // {
+    //   label: "Payment",
+    //   icon: (
+    //     <svg
+    //       xmlns="http://www.w3.org/2000/svg"
+    //       width="24"
+    //       height="24"
+    //       fill="currentColor"
+    //       className="bi bi-credit-card"
+    //       viewBox="0 0 16 16"
+    //     >
+    //       <path d="M2 3h12a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z" />
+    //     </svg>
+    //   ),
+    //   path: "/payment",
+    // },
   ];
 
   // Add conditional item
-  if (userInfo?.role === "manager") {
+  if (userInfo?.role === "Manager") {
     menuItems.push({
-      label: "Laporan Keuangan (Maintance)", // Financial Report
+      label: "Laporan Keuangan", // Financial Report
       icon: (
         <svg
           xmlns="http://www.w3.org/2000/svg"

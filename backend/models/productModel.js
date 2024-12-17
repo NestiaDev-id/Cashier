@@ -10,12 +10,11 @@ const productSchema = new mongoose.Schema(
     },
     description: {
       type: String,
-      maxLength: [1000, "Description cannot exceed 500 characters"],
+      maxLength: [1000, "Description cannot exceed 1000 characters"],
     },
     price: {
       type: Number,
       required: [true, "Please provide a product price"],
-      maxLength: [32, "Price cannot exceed 32 digits"],
       validate: {
         validator: (value) => value >= 0,
         message: "Price must be a positive number",
@@ -30,10 +29,7 @@ const productSchema = new mongoose.Schema(
     category: {
       type: String,
       required: [true, "Please provide a product category"],
-      enum: {
-        values: ["electronics", "fashion", "food", "books", "snack", "drink"],
-        message: "Category must be one of: electronics, fashion, food, books, snack, drink",
-      },
+      enum: ["electronics", "fashion", "food", "books", "snack", "drink"],
     },
     images: {
       type: String,
@@ -48,10 +44,8 @@ const productSchema = new mongoose.Schema(
     },
   },
   {
-    timestamps: true, // Automatically adds createdAt and updatedAt fields
+    timestamps: true,
   }
 );
 
 export const Product = mongoose.model("Product", productSchema);
-
-

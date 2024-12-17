@@ -1,28 +1,19 @@
-const mongoose = require('mongoose');
+import mongoose from "mongoose";
 
-const cartSchema = new mongoose.Schema({
-  pelanggan: {
-    type: String,
-    default: 'Umum', // Pelanggan umum jika tidak terdaftar
+const cartSchema = new mongoose.Schema(
+  {
+    userId: { type: mongoose.Schema.Types.ObjectId, ref: "users", required: true },
+    items: [
+      {
+        produkId: { type: mongoose.Schema.Types.ObjectId, ref: "products", required: true },
+        jumlah: { type: Number, required: true },
+        hargaSatuan: { type: Number, required: true },
+        subTotal: { type: Number, required: true },
+      },
+    ],
+    totalBayar: { type: Number, default: 0 },
   },
-  items: [
-    {
-      produkId: { type: mongoose.Schema.Types.ObjectId, ref: 'Product', required: true }, // Relasi ke skema produk
-      namaProduk: { type: String, required: true },
-      jumlah: { type: Number, required: true, default: 1 },
-      hargaSatuan: { type: Number, required: true },
-      subTotal: { type: Number, required: true }, // jumlah * hargaSatuan
-    },
-  ],
-  totalBayar: {
-    type: Number,
-    required: true,
-    default: 0,
-  },
-  dibuatPada: {
-    type: Date,
-    default: Date.now,
-  },
-});
+  { timestamps: true }
+);
 
-export const Cart = mongoose.model('Cart', cartSchema);
+export const Cart = mongoose.model("Carts", cartSchema);

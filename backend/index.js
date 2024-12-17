@@ -10,6 +10,7 @@ import authRoutes from "./routes/auth.js";
 import userRoutes from "./routes/user.js";
 import transaksiRoutes from "./routes/transaksi.js";
 import productsRoutes from "./routes/products.js";
+import cartRoutes from "./routes/cart.js";
 
 // Load environment variables
 dotenv.config();
@@ -41,6 +42,7 @@ app.use("/api/auth/", authRoutes);
 app.use("/api/product/", productsRoutes);
 app.use("/api/users/", userRoutes);
 app.use("/api/transaksi/", transaksiRoutes);
+app.use("/api/cart/", cartRoutes);
 
 // Database connection and server initialization
 app.listen(PORT, () => {

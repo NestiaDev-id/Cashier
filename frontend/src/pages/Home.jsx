@@ -6,7 +6,7 @@ export default function Home() {
   return (
     <div>
       <Navbar></Navbar>
-      {/* <div className="homepage pb-10">
+      <div className="homepage pb-10">
         <div className="container mx-auto p-3">
           <div className="hero grid  md:grid-cols-2 grid-cols-1 items-center gap-20 pt-32">
             <div className="box">
@@ -56,8 +56,8 @@ export default function Home() {
             </div>
           </div>
         </div>
-      </div> */}
-      <main className="dark:bg-gray-800 bg-white relative overflow-hidden h-screen">
+      </div>
+      {/* <main className="dark:bg-gray-800 bg-white relative overflow-hidden h-screen">
         <header className="h-24 sm:h-32 flex items-center z-30 w-full">
           <div className="container mx-auto px-6 flex items-center justify-between">
             <div className="uppercase text-gray-800 dark:text-white font-black text-3xl">
@@ -125,7 +125,7 @@ export default function Home() {
             </div>
           </div>
         </div>
-      </main>
+      </main> */}
     </div>
   );
 }

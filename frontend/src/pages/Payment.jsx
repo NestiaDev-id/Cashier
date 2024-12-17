@@ -50,7 +50,7 @@ const Payment = () => {
       return;
     }
 
-    setError(""); // Reset error if everything is filled correctly
+    setError("");
 
     try {
       const response = await fetch("http://localhost:5000/api/transaksi/pay", {
@@ -85,6 +85,7 @@ const Payment = () => {
           },
           onClose: function () {
             alert("Anda menutup popup tanpa menyelesaikan pembayaran.");
+            window.location.href = "http://localhost:5173/payment";
           },
         });
       } else {

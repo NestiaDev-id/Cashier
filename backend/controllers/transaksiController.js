@@ -32,31 +32,27 @@ export const getTransaksiById = async (req, res) => {
   }
 };
 
-// POST: Membuat transaksi baru menggunakan Midtrans
 export const createTransaksi = async (req, res) => {
   const { nama, email, phone, itemBelanja, metodePembayaran } = req.body;
 
-  try {
-    // Validasi data input
-    // if (!nama || !email || !phone || !itemBelanja || itemBelanja.length === 0 || !metodePembayaran) {
-    //   return res.status(400).json({ message: 'Semua kolom wajib diisi!' });
-    // }
+  // Validasi input
+  if (!nama || !email || !phone || !itemBelanja || itemBelanja.length === 0 || !metodePembayaran) {
+    return res.status(400).json({ message: "Data transaksi tidak lengkap." });
+  }
 
+  try {
     // Hitung total pembayaran
     const totalBayar = itemBelanja.reduce((total, item) => total + item.subTotal, 0);
 
     // Generate nomor transaksi dan order ID
-    const nomorTransaksi = otpGenerator.generate(10, {
-      upperCase: false,
-      specialChars: false,
-    });
-
+    const nomorTransaksi = otpGenerator.generate(10, { upperCase: false, specialChars: false });
     const orderId = otpGenerator.generate(15, { upperCase: true, specialChars: false });
 
-    // Siapkan parameter untuk Midtrans jika metode pembayaran adalah Midtrans
     let paymentUrl = null;
     let transactionToken = null;
-    if (metodePembayaran === 'Midtrans') {
+
+    // Jika metode pembayaran adalah Midtrans, buat transaksi dengan Snap API
+    if (metodePembayaran === "Midtrans") {
       const parameter = {
         transaction_details: {
           order_id: orderId,
@@ -70,15 +66,28 @@ export const createTransaksi = async (req, res) => {
           email,
           phone,
         },
+        item_details: itemBelanja.map((item) => ({
+          id: item.produkId,
+          price: item.hargaSatuan,
+          quantity: item.jumlah,
+          name: item.namaProduk,
+        })),
       };
 
-      // Membuat transaksi dengan Midtrans Snap API
-      const transaction = await snap.createTransaction(parameter);
-      paymentUrl = transaction.redirect_url; // Ambil URL pembayaran
-      transactionToken = transaction.token; // Ambil token transaksi
+      try {
+        const transaction = await snap.createTransaction(parameter);
+        paymentUrl = transaction.redirect_url; // URL untuk pengguna melakukan pembayaran
+        transactionToken = transaction.token; // Token transaksi
+      } catch (midtransError) {
+        console.error("Error from Midtrans:", midtransError.message);
+        return res.status(500).json({
+          message: "Gagal memproses pembayaran dengan Midtrans.",
+          error: midtransError.message,
+        });
+      }
     }
 
-    // Buat dokumen transaksi
+    // Buat dokumen transaksi di database
     const newTransaksi = new Transaksi({
       tanggal: new Date(),
       nomorTransaksi,
@@ -88,10 +97,10 @@ export const createTransaksi = async (req, res) => {
       itemBelanja,
       totalBayar,
       metodePembayaran,
-      statusPembayaran: metodePembayaran === 'Midtrans' ? 'Pending' : 'Lunas',
+      statusPembayaran: metodePembayaran === "Midtrans" ? "Pending" : "Lunas",
       orderId,
       paymentUrl,
-      transactionToken,  // Simpan token transaksi
+      transactionToken,
     });
 
     // Simpan transaksi ke database
@@ -99,13 +108,14 @@ export const createTransaksi = async (req, res) => {
 
     // Kirim respons ke klien
     res.status(201).json({
-      message: 'Transaksi berhasil dibuat',
+      message: "Transaksi berhasil dibuat.",
       transaksi: newTransaksi,
-      transactionToken, // Kembalikan token transaksi ke klien
+      transactionToken, // Kembalikan token transaksi untuk frontend
     });
   } catch (error) {
+    console.error("Error creating transaction:", error.message);
     res.status(500).json({
-      message: 'Gagal membuat transaksi',
+      message: "Gagal membuat transaksi.",
       error: error.message,
     });
   }
