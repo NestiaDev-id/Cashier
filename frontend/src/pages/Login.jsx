@@ -18,7 +18,7 @@ export default function Login() {
 
     axios
       .post(
-        "http://localhost:5000/api/auth/login",
+        "http://cashier-backend.vercel.app/api/auth/login",
         { email, password },
         {
           headers: { "Content-Type": "application/json" },

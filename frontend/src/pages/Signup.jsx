@@ -25,7 +25,7 @@ export default function SignUp() {
     }
     axios
       .post(
-        "http://localhost:5000/api/auth/signup",
+        "http://cashier-backend/api/auth/signup",
         { name, email, password },
         { headers: { "Content-Type": "application/json" } }
       )

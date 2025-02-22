@@ -49,3 +49,7 @@ app.listen(PORT, () => {
   connectDB(); // Pastikan fungsi ini mengatur koneksi mongoose
   console.log(`App listening at http://localhost:${PORT}`);
 });
+
+app.get("/", (req, res) => {
+  res.send("Backend API is running! 🚀");
+});
