@@ -4,7 +4,7 @@ import Sidebar from "../components/Sidebar";
 import ProductCard from "../components/ProductCard";
 import axios from "axios";
 import { Link } from "react-router-dom";
-import { Dialog } from "@headlessui/react"; // Import untuk modal
+import Dialog from "@headlessui/react";
 import { data } from "autoprefixer";
 
 function Products() {
