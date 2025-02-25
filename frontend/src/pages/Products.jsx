@@ -4,8 +4,8 @@ import Sidebar from "../components/Sidebar";
 import ProductCard from "../components/ProductCard";
 import axios from "axios";
 import { Link } from "react-router-dom";
-import Dialog from "@headlessui/react";
-import { data } from "autoprefixer";
+import { Dialog } from "@headlessui/react"; // ✅ Benar
+// import { data } from "autoprefixer";
 
 function Products() {
   const [products, setProduct] = useState([]);
