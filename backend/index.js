@@ -31,11 +31,13 @@ app.set("view engine", "ejs");
 app.use(express.static(path.join(__dirname, "public"))); // Ganti folder static jika perlu
 
 // Enable CORS
-app.use(cors({
-  origin: 'http://localhost:5173', // Allow only requests from your frontend
-  methods: ['GET', 'POST', 'PUT', 'DELETE'], // Specify allowed HTTP methods
-  allowedHeaders: ['Content-Type', 'Authorization'], // Specify allowed headers
-}));
+app.use(
+  cors({
+    origin: "http://localhost:5173", // Allow only requests from your frontend
+    methods: ["GET", "POST", "PUT", "DELETE"], // Specify allowed HTTP methods
+    allowedHeaders: ["Content-Type", "Authorization"], // Specify allowed headers
+  })
+);
 
 // Routes
 app.use("/api/auth/", authRoutes);
