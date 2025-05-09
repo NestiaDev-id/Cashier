@@ -50,6 +50,7 @@ Ikuti langkah-langkah berikut untuk menjalankan SCAPA POS secara lokal:
 ```bash
 git clone https://github.com/username/scapa-pos.git
 cd scapa-pos
+```
 
 ### 2. Jalankan backend
 ```bash
